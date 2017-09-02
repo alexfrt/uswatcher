@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-network_name="paper"
+network_name="uswatcher"
 network_range="172.20.0.0/16"
 elasticsearch_id="elasticsearch"
 elasticsearch_ip="172.20.0.2"
