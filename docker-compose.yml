@@ -1,0 +1,63 @@
+---
+version: "2"
+
+services:
+  elasticsearch:
+    image: elasticsearch:5.5.2
+    networks:
+      netlab:
+        ipv4_address: 172.20.0.2
+
+  kibana:
+    image: kibana:5.5.2
+    networks:
+      netlab:
+        ipv4_address: 172.20.0.3
+
+  packetbeat:
+    build: ./infra/packetbeat
+    depends_on:
+      - elasticsearch
+    privileged: true
+    networks:
+      netlab:
+        ipv4_address: 172.20.0.4
+
+  dashboard:
+    image: docker.elastic.co/beats/packetbeat:5.5.2
+    command: /bin/bash -c "sleep 20 && ./scripts/import_dashboards -es http://elasticsearch:9200"
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    networks:
+      netlab:
+        ipv4_address: 172.20.0.5
+
+  producer:
+    build: ./microservices/producer
+    volumes:
+      - ./microservices/producer:/code
+    ports:
+      - "9090:9090"
+    networks:
+      netlab:
+        ipv4_address: 172.20.0.6
+
+  consumer:
+    build: ./microservices/consumer
+    depends_on:
+      - producer
+    volumes:
+      - ./microservices/consumer:/code
+    networks:
+      netlab:
+        ipv4_address: 172.20.0.7
+
+networks:
+  netlab:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.20.0.0/16
+         gateway: 172.20.0.1

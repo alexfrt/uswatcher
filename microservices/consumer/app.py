@@ -23,7 +23,7 @@ if __name__ == '__main__':
 			assert response.status_code == 200
 			log.info("Successfully retrieved data from Rest API")
 			log.info(response.json())
-			time.sleep(sleepTime/2)
+			time.sleep(sleepTime)
 		except:
 			log.info("Connection refused by the server..")
 			log.info("Retrying after 10 seconds")
