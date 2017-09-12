@@ -13,7 +13,7 @@ services:
     networks:
       netlab:
         ipv4_address: 172.20.0.3
-  
+
   packetbeat:
     build: ./infra/packetbeat
     depends_on:
@@ -22,10 +22,10 @@ services:
     networks:
       netlab:
         ipv4_address: 172.20.0.4
-  
+
   dashboard:
     image: docker.elastic.co/beats/packetbeat:5.5.2
-    command: ./scripts/import_dashboards -es http://elasticsearch:9200
+    command: /bin/bash -c "sleep 20 && ./scripts/import_dashboards -es http://elasticsearch:9200"
     depends_on:
       - elasticsearch
     ports:
@@ -53,7 +53,7 @@ services:
     networks:
       netlab:
         ipv4_address: 172.20.0.7
-    
+
 networks:
   netlab:
     driver: bridge
