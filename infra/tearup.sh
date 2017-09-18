@@ -49,7 +49,7 @@ if [ ! "$(docker ps -q -f name=${packetbeat_id})" ]; then
     sleep 10
 
     echo "-- Running PacketBeat container"
-    docker run --name ${packetbeat_id} --ip ${packetbeat_ip} --network ${network_name} --privileged -d ${packetbeat_image}
+    docker run --name ${packetbeat_id} --network host --privileged -d ${packetbeat_image}
 
     echo "-- Configuring Kibana dashboards for Packetbeat"
     docker run --rm --network ${network_name} docker.elastic.co/beats/packetbeat:5.5.2 ./scripts/import_dashboards -es http://${elasticsearch_id}:9200
